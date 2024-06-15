@@ -7,7 +7,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 //Load env vars
-dotenv.config({ path: "./config/config.env" });
+dotenv.config({ path: "./.env" });
 
 //Connect to database
 connectDB();
