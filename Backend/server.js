@@ -1,19 +1,37 @@
-const express = require('express');
+const express = require("express");
+const connectDB = require("./config/db");
+const dotenv = require("dotenv");
+const { readdirSync } = require("fs");
+const morgan = require("morgan");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+
+//Load env vars
+dotenv.config({ path: "./.env" });
+
+//Connect to database
+connectDB();
+
 const app = express();
 
-// Example defining a route in Express
-app.get('/', (req, res) => {
-    res.send('<h1>Hello, Express.js Server!</h1>');
-});
+app.use(morgan('dev'));
+app.use(cors());
+app.use(bodyParser.json({ limit: "10mb" }));
 
-// Include route files
-const userRoute = require('./routes/users');
+const PORT = process.env.PORT || 3000;
+const server = app.listen(
+  PORT,
+  console.log(
+    `Server running in ${process.env.NODE_ENV} mode on ${process.env.HOST}: ${PORT}`
+  )
+);
 
-// Use routes
-app.use("/users", userRoute);
+//Load all routes
+readdirSync("./routes").map((r) => app.use("/api/v1", require(`./routes/${r}`)));
 
-const port = process.env.PORT || 3000;
-
-server.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+//Handle unhandled promise rejections
+process.on("unhandledRejection", (err, promise) => {
+  console.log(`Error: ${err.message}`);
+  //Close server & exit process
+  server.close(() => process.exit(1));
 });

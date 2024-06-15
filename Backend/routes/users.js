@@ -1,16 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.send('this is user route');
-});
+const { GetAllUsers, GetUserByID, InsertNewUser, UpdateUser, DeleteUser } = require('../controllers/users');
 
-router.get('/101', (req, res) => {
-    res.send('this is user 101 route');
-});
-
-router.get('/102', (req, res) => {
-    res.send('this is user 102 route');
-});
+router.get('/users/get_all_users', GetAllUsers);
+router.get('/users/get_user_by_id/:id', GetUserByID);
+router.post('/users/create_user', InsertNewUser);
+router.put('/users/update_user/:id', UpdateUser);
+router.delete('/users/delete_user/:id', DeleteUser);
 
 module.exports = router;
