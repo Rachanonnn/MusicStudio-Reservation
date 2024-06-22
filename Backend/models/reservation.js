@@ -1,31 +1,31 @@
 const mongoose = require('mongoose');
 
 const reservationSchema = new mongoose.Schema({
-    reservationid: {
+    ReservationID: {
         type: String,
         required: true
     },
-    studio_id: {
+    StudioID: {
         type: String,
         required: true
     },
-    uid: {
+    UID: {
         type: String,
         required: true
     },
-    reservation_date: {
+    ReservationDate: {
         type: Date,
         required: true
     },
-    start_time: {
+    StartTime: {
         type: String,
         required: true
     },
-    end_time: {
+    EndTime: {
         type: String,
         required: true
     },
-    total_cost: {
+    TotalCost: {
         type: String,
         required: true
     },

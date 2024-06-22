@@ -14,14 +14,14 @@ exports.Register = async (req, res) => {
     }
 
     const uid = uuidv4();
-    const role = "user";
+    const Role = "user";
 
     user = new User({
       email,
       uid,
       first_name,
       last_name,
-      role,
+      Role,
       password,
       tel,
     });

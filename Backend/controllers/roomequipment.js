@@ -45,7 +45,7 @@ exports.GetEquipmentByID = async (req, res) => {
 exports.InsertNewEquipment = async (req, res) => {
   try {
 
-    if (req.user.role != "admin") {
+    if (req.user.Role != "admin") {
       return res.status(401).json({ success: false, message: "Unauthorized access" });
     }
 
@@ -84,7 +84,7 @@ exports.InsertNewEquipment = async (req, res) => {
 exports.UpdateEquipment = async (req, res) => {
   try {
 
-    if (req.user.role != "admin") {
+    if (req.user.Role != "admin") {
       return res.status(401).json({ success: false, message: "Unauthorized access" });
     }
 
@@ -118,7 +118,7 @@ exports.UpdateEquipment = async (req, res) => {
 exports.DeleteEquipment = async (req, res) => {
   try {
 
-    if (req.user.role != "admin") {
+    if (req.user.Role != "admin") {
       return res.status(401).json({ success: false, message: "Unauthorized access" });
     }
     

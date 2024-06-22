@@ -33,7 +33,7 @@ exports.GetStudioByID = async (req, res) => {
 exports.InsertNewStudio = async (req, res) => {
   try {
 
-    if (req.user.role != "admin") {
+    if (req.user.Role != "admin") {
       return res.status(401).json({ success: false, message: "Unauthorized access" });
     }
 
@@ -60,7 +60,7 @@ exports.InsertNewStudio = async (req, res) => {
 exports.UpdateStudio = async (req, res) => {
   try {
 
-    if (req.user.role != "admin") {
+    if (req.user.Role != "admin") {
       return res.status(401).json({ success: false, message: "Unauthorized access" });
   }
 
@@ -80,7 +80,7 @@ exports.UpdateStudio = async (req, res) => {
 exports.DeleteStudio = async (req, res) => {
   try {
 
-    if (req.user.role != "admin") {
+    if (req.user.Role != "admin") {
       return res.status(401).json({ success: false, message: "Unauthorized access" });
     }
 

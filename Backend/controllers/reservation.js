@@ -19,7 +19,7 @@ exports.GetAllReservation = async (req, res) => {
 exports.GetReservationByID = async (req, res) => {
     try {
         const id = req.params.id;
-        const reservation = await Reservation.findOne({ uid: id }).exec();
+        const reservation = await Reservation.findOne({ UID: id }).exec();
 
         if (!reservation) {
             return res.status(400).json({success: false});
@@ -49,7 +49,7 @@ exports.InsertNewReservation = async (req, res) => {
 exports.UpdateReservation = async (req, res) => {
     try {
         const id = req.params.id;
-        const updatedReservation = await Reservation.findOneAndUpdate({ uid: id }, req.body, { new: true }).exec();
+        const updatedReservation = await Reservation.findOneAndUpdate({ UID: id }, req.body, { new: true }).exec();
         
         if (!updatedReservation) {
             return res.status(400).json({success: false});
@@ -64,7 +64,7 @@ exports.UpdateReservation = async (req, res) => {
 exports.DeleteReservation = async (req, res) => {
     try {
         const id = req.params.id;
-        const deletedReservation = await Reservation.findOneAndDelete({ uid: id }).exec();
+        const deletedReservation = await Reservation.findOneAndDelete({ UID: id }).exec();
         
         if (!deletedReservation) {
             return res.status(400).json({success: false});

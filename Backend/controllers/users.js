@@ -3,7 +3,7 @@ const Users = require('../models/users');
 exports.GetAllUsers = async (req, res) => {
     try {
 
-        if (req.user.role != "admin") {
+        if (req.user.Role != "admin") {
             return res.status(401).json({ success: false, message: "Unauthorized access" });
         }
 
@@ -24,7 +24,7 @@ exports.GetAllUsers = async (req, res) => {
 exports.GetUserByID = async (req, res) => {
     try {
         const id = req.params.id;
-        const user = await Users.findOne({ uid: id }).exec();
+        const user = await Users.findOne({ UID: id }).exec();
 
         if (!user) {
             return res.status(400).json({success: false});
@@ -39,7 +39,7 @@ exports.GetUserByID = async (req, res) => {
 exports.UpdateUser = async (req, res) => {
     try {
         const id = req.params.id;
-        const updatedUser = await Users.findOneAndUpdate({ uid: id }, req.body, { new: true }).exec();
+        const updatedUser = await Users.findOneAndUpdate({ UID: id }, req.body, { new: true }).exec();
         
         if (!updatedUser) {
             return res.status(400).json({success: false});
