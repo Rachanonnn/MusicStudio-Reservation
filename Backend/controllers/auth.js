@@ -5,29 +5,29 @@ const jwt = require('jsonwebtoken');
 
 exports.Register = async (req, res) => {
   try {
-    const { email, password, first_name, last_name, tel } = req.body;
+    const { Email, Password, FirstName, LastName, Tel } = req.body;
 
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ Email });
 
     if (user) {
       return res.status(400).json({ success: false, message: 'User already exists' });
     }
 
-    const uid = uuidv4();
+    const UID = uuidv4();
     const Role = "user";
 
     user = new User({
-      email,
-      uid,
-      first_name,
-      last_name,
+      Email,
+      UID,
+      FirstName,
+      LastName,
       Role,
-      password,
-      tel,
+      Password,
+      Tel,
     });
 
     const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(password, salt);
+    user.Password = await bcrypt.hash(Password, salt);
 
     await user.save();
 
@@ -39,20 +39,20 @@ exports.Register = async (req, res) => {
 
 exports.Login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { Email, Password } = req.body;
 
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ Email });
 
     if (!user) {
       return res.status(400).json({ success: false, message: 'User does not exist' });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(Password, user.Password);
     if (!isMatch) {
       return res.status(400).json({ success: false, message: 'Incorrect email or password' });
     }
 
-    const payload = { user: { email: user.email } };
+    const payload = { user: { email: user.Email } };
 
     jwt.sign(
       payload,

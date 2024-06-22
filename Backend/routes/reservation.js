@@ -13,10 +13,10 @@ const { auth } = require('../middlewares/auth');
 
 router.use(auth);
 
-router.get('/reservations', GetAllReservation);
-router.get('/reservations/:id', GetReservationByID);
-router.post('/reservations', InsertNewReservation);
-router.put('/reservations/:id', UpdateReservation);
-router.delete('/reservations/:id', DeleteReservation);
+router.get('/reservations/get_all_reservations', GetAllReservation);
+router.get('/reservations/get_reservation_by_id/:id', GetReservationByID);
+router.post('/reservations/create_reservation', InsertNewReservation);
+router.put('/reservations/update_reservation/:id', UpdateReservation);
+router.delete('/reservations/delete_reservation/:id', DeleteReservation);
 
 module.exports = router;
