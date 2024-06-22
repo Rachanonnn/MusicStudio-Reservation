@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 
 exports.Register = async (req, res) => {
   try {
-    const { email, password, first_name, last_name, role, tel } = req.body;
+    const { email, password, first_name, last_name, tel } = req.body;
 
     let user = await User.findOne({ email });
 
@@ -14,6 +14,7 @@ exports.Register = async (req, res) => {
     }
 
     const uid = uuidv4();
+    const role = "user";
 
     user = new User({
       email,
@@ -29,7 +30,7 @@ exports.Register = async (req, res) => {
     user.password = await bcrypt.hash(password, salt);
 
     await user.save();
-    
+
     res.status(200).json({ success: true, data: user });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
