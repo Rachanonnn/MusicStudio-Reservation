@@ -9,6 +9,10 @@ const reservationSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    RoomID: {
+        type: String,
+        required: true
+    },
     UID: {
         type: String,
         required: true

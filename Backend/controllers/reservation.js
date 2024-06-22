@@ -38,11 +38,25 @@ exports.GetReservationByID = async (req, res) => {
 
 exports.InsertNewReservation = async (req, res) => {
     try {
-        const { StudioID, ReservationDate, StartTime, EndTime, TotalCost } = req.body;
+        const { StudioID, RoomID, ReservationDate, StartTime, EndTime, TotalCost } = req.body;
 
         const studio = await Studio.findOne({ StudioID });
         if (!studio) {
             return res.status(400).json({ success: false, message: 'Studio not found' });
+        }
+
+        const studioRoom = studio.RoomList.find((room) => room.RoomID === RoomID);
+
+        if (!studioRoom) {
+          return res.status(404).json({ success: false, message: "Room not found in the studio" });
+        }
+
+        if (studioRoom.Status != "Available") {
+            return res.status(400).json({ success: false, message: 'Room is not available' });
+        }
+
+        if (StartTime >= EndTime) {
+            return res.status(400).json({ success: false, message: 'Start time must be before end time' });
         }
 
         const existingReservation = await Reservation.findOne({
@@ -78,6 +92,9 @@ exports.InsertNewReservation = async (req, res) => {
         });
 
         await newReservation.save();
+
+        studioRoom.Status = "Unavailable";
+        await studio.save();
 
         res.status(200).json({ success: true, data: newReservation });
 
@@ -134,15 +151,32 @@ exports.UpdateReservation = async (req, res) => {
      }
  }
 
-exports.DeleteReservation = async (req, res) => {
+ exports.DeleteReservation = async (req, res) => {
     try {
-        const { ReservationID } = req.params.id;
+        const { ReservationID } = req.params;
 
         const reservation = await Reservation.findOneAndDelete({ ReservationID });
 
         if (!reservation) {
             return res.status(404).json({ success: false, message: 'Reservation not found' });
         }
+
+        const { StudioID, RoomID } = reservation;
+
+        const studio = await Studio.findOne({ StudioID });
+
+        if (!studio) {
+            return res.status(400).json({ success: false, message: 'Studio not found' });
+        }
+
+        const studioRoom = studio.RoomList.find((room) => room.RoomID === RoomID);
+
+        if (!studioRoom) {
+            return res.status(404).json({ success: false, message: 'Room not found in the studio' });
+        }
+
+        studioRoom.Status = "Available";
+        await studio.save();
 
         res.status(200).json({ success: true, data: reservation });
 
