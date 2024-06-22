@@ -2,6 +2,12 @@ const Users = require('../models/users');
 
 exports.GetAllUsers = async (req, res) => {
     try {
+
+        if (req.user.role != "admin") {
+            return res.status(401).json({ success: false, message: "Unauthorized access" });
+        }
+
+
         const users = await Users.find({}).exec();
 
         if (!users) {

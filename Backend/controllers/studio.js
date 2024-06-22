@@ -32,6 +32,11 @@ exports.GetStudioByID = async (req, res) => {
 
 exports.InsertNewStudio = async (req, res) => {
   try {
+
+    if (req.user.role != "admin") {
+      return res.status(401).json({ success: false, message: "Unauthorized access" });
+    }
+
     const newStudio = new Studio(req.body);
     const studio = await Studio.findOne({ StudioID: newStudio.StudioID });
 
@@ -54,6 +59,11 @@ exports.InsertNewStudio = async (req, res) => {
 
 exports.UpdateStudio = async (req, res) => {
   try {
+
+    if (req.user.role != "admin") {
+      return res.status(401).json({ success: false, message: "Unauthorized access" });
+  }
+
     const id = req.body.StudioID;
     const updatedStudio = await Studio.findOneAndUpdate({ StudioID: id }, req.body, { new: true });
 
@@ -69,6 +79,11 @@ exports.UpdateStudio = async (req, res) => {
 
 exports.DeleteStudio = async (req, res) => {
   try {
+
+    if (req.user.role != "admin") {
+      return res.status(401).json({ success: false, message: "Unauthorized access" });
+    }
+
     const id = req.params.studioID;
     const deletedStudio = await Studio.findOneAndDelete({ StudioID: id });
 
