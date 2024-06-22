@@ -1,20 +1,22 @@
+const jwt = require("jsonwebtoken");
+
 exports.auth = async (req, res, next) => {
     try {
-        const token = req.header("Authorization").replace("Bearer ", "");
-
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-        const user = await User.findOne({ _id: decoded._id, "tokens.token": token });
-
-        if (!user) {
-            throw new Error();
+        const authHeader = req.header("Authorization");
+        if (!authHeader) {
+            return res.status(401).json({ success: false, message: "No token provided" });
         }
 
-        req.user = user;
-        req.token = token;
-        next();
+        const token = authHeader.replace("Bearer ", "");
+        if (!token) {
+            return res.status(401).json({ success: false, message: "No token provided" });
+        }
 
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.user = decoded.user;
+
+        next();
     } catch (error) {
-        res.Status(500).json({ success: false, message: error.message });
+        res.status(401).json({ success: false, message: "Invalid token" });
     }
-}
+};

@@ -5,6 +5,10 @@ const roomController = require('../controllers/studioroom');
 const equipmentController = require('../controllers/roomEquipment');
 const studioController = require('../controllers/studio');
 
+const { auth } = require('../middlewares/auth');
+
+router.use(auth);
+
 router.get('/studio/get_all_studios', studioController.GetAllStudios);
 router.get('/studio/get_studio_by_id/:studioID', studioController.GetStudioByID);
 router.post('/studio/create_studio', studioController.InsertNewStudio);
