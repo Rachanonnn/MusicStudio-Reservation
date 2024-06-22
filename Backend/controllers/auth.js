@@ -1,4 +1,4 @@
-const User = require("../models/users");
+const User = require("../config/config");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -18,7 +18,11 @@ exports.Register = async (req, res) => {
 
     user = new User({
       email,
+      first_name,
+      last_name,
+      role,
       password,
+      tel,
     });
 
     user.password = await bcrypt.hash(password, salt);
