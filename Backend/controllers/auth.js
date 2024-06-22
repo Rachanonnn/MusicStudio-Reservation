@@ -1,21 +1,18 @@
-const User = require("../models/users");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const User = require('../models/users');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 exports.Register = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, first_name, last_name, role, tel } = req.body;
 
-    var user = await User.findOne({ email });
+    let user = await User.findOne({ email });
 
     if (user) {
-      return res
-        .status(400)
-        .json({ success: false, message: "User already exists" });
+      return res.status(400).json({ success: false, message: 'User already exists' });
     }
 
     const salt = await bcrypt.genSalt(10);
-
     user = new User({
       email,
       first_name,
@@ -37,33 +34,23 @@ exports.Login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    var user = await User.findOneAndUpdate({ email }, { new: true });
+    let user = await User.findOne({ email });
 
     if (!user) {
-      return res
-        .status(400)
-        .json({ success: false, message: "User does not exist" });
+      return res.status(400).json({ success: false, message: 'User does not exist' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res
-        .status(400)
-        .json({ success: false, message: "Incorrect email or password" });
+      return res.status(400).json({ success: false, message: 'Incorrect email or password' });
     }
 
-    var payload = {
-      user: {
-        email: user.email,
-      },
-    };
+    const payload = { user: { email: user.email } };
 
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
-      {
-        expiresIn: 360000,
-      },
+      { expiresIn: process.env.JWT_EXPIRE },
       (err, token) => {
         if (err) throw err;
         res.status(200).json({ success: true, token });
