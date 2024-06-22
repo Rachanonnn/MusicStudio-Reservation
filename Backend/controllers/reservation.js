@@ -2,6 +2,7 @@ const Reservation = require('../models/reservation');
 
 exports.GetAllReservation = async (req, res) => {
     try {
+
         const reservation = await Reservation.find({}).exec();
 
         if (!reservation) {

@@ -40,6 +40,11 @@ exports.GetStudioRoomByID = async (req, res) => {
 
 exports.InsertNewStudioRoom = async (req, res) => {
   try {
+
+    if (req.user.role != "admin") {
+      return res.status(401).json({ success: false, message: "Unauthorized access" });
+    }
+
     const studioID = req.body.StudioID;
     const newRoom = req.body.newRoom;
 
@@ -79,6 +84,11 @@ exports.InsertNewStudioRoom = async (req, res) => {
 
 exports.UpdateStudioRoom = async (req, res) => {
   try {
+
+    if (req.user.role != "admin") {
+      return res.status(401).json({ success: false, message: "Unauthorized access" });
+    }
+
     const studioID = req.body.StudioID;
     const roomData = req.body.roomData;
     const roomID = req.body.roomData.RoomID;
@@ -107,6 +117,11 @@ exports.UpdateStudioRoom = async (req, res) => {
 
 exports.DeleteStudioRoom = async (req, res) => {
   try {
+
+    if (req.user.role != "admin") {
+      return res.status(401).json({ success: false, message: "Unauthorized access" });
+    }
+    
     const studioID = req.params.studioID;
     const roomID = req.params.roomID;
 

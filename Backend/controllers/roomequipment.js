@@ -2,6 +2,7 @@ const RoomEquipment = require("../models/roomEquipment");
 
 exports.GetAllEquipment = async (req, res) => {
   try {
+    
     const studioID = req.params.studioID;
     const roomID = req.params.roomID;
 
@@ -43,6 +44,11 @@ exports.GetEquipmentByID = async (req, res) => {
 
 exports.InsertNewEquipment = async (req, res) => {
   try {
+
+    if (req.user.role != "admin") {
+      return res.status(401).json({ success: false, message: "Unauthorized access" });
+    }
+
     const studioID = req.body.StudioID;
     const roomID = req.body.RoomID;
     const newEquipment = req.body.newEquipment;
@@ -77,6 +83,12 @@ exports.InsertNewEquipment = async (req, res) => {
 
 exports.UpdateEquipment = async (req, res) => {
   try {
+
+    if (req.user.role != "admin") {
+      return res.status(401).json({ success: false, message: "Unauthorized access" });
+    }
+
+
     const studioID = req.body.StudioID;
     const roomID = req.body.RoomID;
     const equipmentData = req.body.equipmentData;
@@ -105,6 +117,11 @@ exports.UpdateEquipment = async (req, res) => {
 
 exports.DeleteEquipment = async (req, res) => {
   try {
+
+    if (req.user.role != "admin") {
+      return res.status(401).json({ success: false, message: "Unauthorized access" });
+    }
+    
     const studioID = req.params.studioID;
     const roomID = req.params.roomID;
     const equipmentID = req.params.equipmentID;

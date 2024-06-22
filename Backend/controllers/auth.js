@@ -1,10 +1,11 @@
 const User = require('../models/users');
+const { v4: uuidv4 } = require('uuid');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 exports.Register = async (req, res) => {
   try {
-    const { email, password, first_name, last_name, role, tel } = req.body;
+    const { email, password, first_name, last_name, tel } = req.body;
 
     let user = await User.findOne({ email });
 
@@ -12,9 +13,12 @@ exports.Register = async (req, res) => {
       return res.status(400).json({ success: false, message: 'User already exists' });
     }
 
-    const salt = await bcrypt.genSalt(10);
+    const uid = uuidv4();
+    const role = "user";
+
     user = new User({
       email,
+      uid,
       first_name,
       last_name,
       role,
@@ -22,8 +26,11 @@ exports.Register = async (req, res) => {
       tel,
     });
 
+    const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(password, salt);
+
     await user.save();
+
     res.status(200).json({ success: true, data: user });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
