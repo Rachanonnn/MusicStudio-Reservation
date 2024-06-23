@@ -38,7 +38,7 @@ exports.GetReservationByID = async (req, res) => {
 
 exports.InsertNewReservation = async (req, res) => {
     try {
-        const { StudioID, RoomID, ReservationDate, StartTime, EndTime, TotalCost } = req.body;
+        const { StudioID, RoomID, ReservationDate, StartTime, EndTime } = req.body;
 
         const studio = await Studio.findOne({ StudioID });
         if (!studio) {
@@ -58,6 +58,8 @@ exports.InsertNewReservation = async (req, res) => {
         if (StartTime >= EndTime) {
             return res.status(400).json({ success: false, message: 'Start time must be before end time' });
         }
+
+        const TotalCost = (EndTime - StartTime) * studioRoom.HourlyRate;
 
         const existingReservation = await Reservation.findOne({
             StudioID,
@@ -92,9 +94,6 @@ exports.InsertNewReservation = async (req, res) => {
         });
 
         await newReservation.save();
-
-        studioRoom.Status = "Unavailable";
-        await studio.save();
 
         res.status(200).json({ success: true, data: newReservation });
 
@@ -153,30 +152,9 @@ exports.UpdateReservation = async (req, res) => {
 
  exports.DeleteReservation = async (req, res) => {
     try {
-        const { ReservationID } = req.params;
+        const ReservationID = req.params.id;
 
         const reservation = await Reservation.findOneAndDelete({ ReservationID });
-
-        if (!reservation) {
-            return res.status(404).json({ success: false, message: 'Reservation not found' });
-        }
-
-        const { StudioID, RoomID } = reservation;
-
-        const studio = await Studio.findOne({ StudioID });
-
-        if (!studio) {
-            return res.status(400).json({ success: false, message: 'Studio not found' });
-        }
-
-        const studioRoom = studio.RoomList.find((room) => room.RoomID === RoomID);
-
-        if (!studioRoom) {
-            return res.status(404).json({ success: false, message: 'Room not found in the studio' });
-        }
-
-        studioRoom.Status = "Available";
-        await studio.save();
 
         res.status(200).json({ success: true, data: reservation });
 
