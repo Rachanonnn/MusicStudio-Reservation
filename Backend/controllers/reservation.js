@@ -105,7 +105,7 @@ exports.InsertNewReservation = async (req, res) => {
 exports.UpdateReservation = async (req, res) => {
     try {
         const ReservationID = req.params.id;
-        const { StudioID, ReservationDate, StartTime, EndTime, TotalCost } = req.body;
+        const { StudioID, ReservationDate, StartTime, EndTime } = req.body;
 
          let reservation = await Reservation.findOne({ ReservationID });
          if (!reservation) {
@@ -116,6 +116,12 @@ exports.UpdateReservation = async (req, res) => {
          if (!studio) {
              return res.status(400).json({ success: false, message: 'Studio not found' });
          }
+
+        const studioRoom = studio.RoomList.find((room) => room.RoomID === reservation.RoomID);
+
+        if (!studioRoom) {
+          return res.status(404).json({ success: false, message: "Room not found in the studio" });
+        }
  
          const existingReservation = await Reservation.findOne({
              StudioID,
@@ -134,6 +140,8 @@ exports.UpdateReservation = async (req, res) => {
          if (existingReservation) {
              return res.status(400).json({ success: false, message: 'Overlap with existing reservation' });
          }
+
+         const TotalCost = (EndTime - StartTime) * studioRoom.HourlyRate;
  
          reservation.StudioID = StudioID;
          reservation.ReservationDate = ReservationDate;
